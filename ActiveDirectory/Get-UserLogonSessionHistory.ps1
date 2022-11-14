@@ -34,13 +34,13 @@ try {
     )
     
     ## All of the IDs that designate when user activity starts
-    $sessionStartIds = ($sessionEvents | where { $_.EventType -eq 'SessionStart' }).ID
+    $sessionStartIds = ($sessionEvents | Where-Object { $_.EventType -eq 'SessionStart' }).ID
     ## All of the IDs that designate when user activity stops
-    $sessionStopIds = ($sessionEvents | where { $_.EventType -eq 'SessionStop' }).ID
+    $sessionStopIds = ($sessionEvents | Where-Object { $_.EventType -eq 'SessionStop' }).ID
     #endregion
 	
     ## Define all of the log names we'll be querying
-    $logNames = ($sessionEvents.LogName | select -Unique)
+    $logNames = ($sessionEvents.LogName | Select-Object -Unique)
     ## Grab all of the interesting IDs we'll be looking for
     $ids = $sessionEvents.Id
 		
@@ -75,7 +75,7 @@ try {
         if ($computer -ne $Env:COMPUTERNAME) {
 		    $getGimInstanceParams.ComputerName = $computer
 		}
-		$loggedInUsers = Get-CimInstance @getGimInstanceParams | Select-Object -ExpandProperty UserName | foreach { $_.split('\')[1] }
+		$loggedInUsers = Get-CimInstance @getGimInstanceParams | Select-Object -ExpandProperty UserName | ForEach-Object { $_.split('\')[1] }
 
 		## Find all user start activity events and begin parsing
 		@($events).where({ $_.Id -in $sessionStartIds }).foreach({
@@ -85,10 +85,10 @@ try {
 			    $xEvt = [xml]$_.ToXml()
 
 			    ## Figure out the login session ID
-			    $output.Username = ($xEvt.Event.EventData.Data | where { $_.Name -eq 'TargetUserName' }).'#text'
-			    $logonId = ($xEvt.Event.EventData.Data | where { $_.Name -eq 'TargetLogonId' }).'#text'
+			    $output.Username = ($xEvt.Event.EventData.Data | Where-Object { $_.Name -eq 'TargetUserName' }).'#text'
+			    $logonId = ($xEvt.Event.EventData.Data | Where-Object { $_.Name -eq 'TargetLogonId' }).'#text'
 			    if (-not $logonId) {
-				$logonId = ($xEvt.Event.EventData.Data | where { $_.Name -eq 'LogonId' }).'#text'
+				$logonId = ($xEvt.Event.EventData.Data | Where-Object { $_.Name -eq 'LogonId' }).'#text'
 			    }
 			    $output.StartTime = $_.TimeCreated
 
@@ -97,8 +97,8 @@ try {
 			    if (-not ($sessionEndEvent = @($Events).where({ ## If a user activity end event could not be found, assume the user is still logged on
 					    $_.TimeCreated -gt $output.StartTime -and
 					    $_.ID -in $sessionStopIds -and
-					    (([xml]$_.ToXml()).Event.EventData.Data | where { $_.Name -eq 'TargetLogonId' }).'#text' -eq $logonId
-					})) | select -last 1) {
+					    (([xml]$_.ToXml()).Event.EventData.Data | Where-Object { $_.Name -eq 'TargetLogonId' }).'#text' -eq $logonId
+					})) | Select-Object -last 1) {
 				if ($output.UserName -in $loggedInUsers) {
 				    $output.StopTime = Get-Date
 				    $output.StopAction = 'Still logged in'

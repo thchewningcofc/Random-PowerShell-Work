@@ -13,11 +13,11 @@ foreach ($o in $ad_objects) {
 	}##endif
 }##endforeach
 
-$a0CountOus = $aOuDns | Group-Object | Where-Object { $_.Count -eq 1 } | % { $_.Name };
+$a0CountOus = $aOuDns | Group-Object | Where-Object { $_.Count -eq 1 } | ForEach-Object { $_.Name };
 $empty_ous = 0;
 $ous_removed = 0;
 foreach ($sOu in $a0CountOus) {
-	if (!(Get-ADObject -Filter "ObjectClass -eq 'organizationalUnit'" | where { $_.DistinguishedName -like "*$sOu*" -and $_.DistinguishedName -ne $sOu })) {
+	if (!(Get-ADObject -Filter "ObjectClass -eq 'organizationalUnit'" | Where-Object { $_.DistinguishedName -like "*$sOu*" -and $_.DistinguishedName -ne $sOu })) {
 		$ou = Get-AdObject -Filter { DistinguishedName -eq $sOu };
 		if ($ous_to_keep -notcontains $ou.Name) {
 			if ($remove_ous) {
@@ -30,6 +30,6 @@ foreach ($sOu in $a0CountOus) {
 		}##endif
 	}##endif
 }##endforeach
-echo '-------------------'
-echo "Total Empty OUs Removed: $ous_removed"
-echo "Total Empty OUs: $empty_ous"
+Write-Output '-------------------'
+Write-Output "Total Empty OUs Removed: $ous_removed"
+Write-Output "Total Empty OUs: $empty_ous"

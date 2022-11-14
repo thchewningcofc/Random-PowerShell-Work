@@ -30,7 +30,7 @@ foreach ($sGpo in $aGposToRead) {
 			$o | Add-Member -type NoteProperty -Name 'UnpopulatedLink' -Value 'User';
 			if ($bRemediate) {
 				(Get-GPO $xGpo.Name).GPOStatus = 'UserSettingsDisabled';
-				echo "Disabled user settings on GPO $($xGpo.Name)";
+				Write-Output "Disabled user settings on GPO $($xGpo.Name)";
 			} else {
 				$o
 			}##endif
@@ -39,7 +39,7 @@ foreach ($sGpo in $aGposToRead) {
 			$o | Add-Member -type NoteProperty -Name 'UnpopulatedLink' -Value 'Computer' -Force;
 			if ($bRemediate) {
 				(Get-GPO $xGpo.Name).GPOStatus = 'ComputerSettingsDisabled';
-				echo "Disabled computer settings on GPO $($xGpo.Name)";
+				Write-Output "Disabled computer settings on GPO $($xGpo.Name)";
 			} else {
 				$o
 			}##endif

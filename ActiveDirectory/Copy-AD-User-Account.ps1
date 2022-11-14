@@ -32,7 +32,7 @@ $params = @{'SamAccountName' = $new_samaccountname;
 New-ADUser -Name $new_name @params
 
 ## Mirror all the groups the original account was a member of
-$ad_account_to_copy.Memberof | % {Add-ADGroupMember $_ $new_samaccountname }
+$ad_account_to_copy.Memberof | ForEach-Object {Add-ADGroupMember $_ $new_samaccountname }
 
 ## Move the new user account into the assigned OU
 Get-ADUser $new_samaccountname| Move-ADObject -TargetPath $new_ou_DN

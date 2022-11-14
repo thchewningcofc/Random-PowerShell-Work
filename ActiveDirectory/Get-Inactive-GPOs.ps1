@@ -11,9 +11,9 @@ foreach ($oGpo in $aDisabledGpos) {
 $aAllGpos = Get-Gpo -All;
 $aUnlinkedGpos = @();
 foreach ($oGpo in $aAllGpos) {
-	 [xml]$oGpoReport = Get-GPOReport -Guid $oGpo.ID -ReportType xml;
-	 if (!(Test-Member $oGpoReport.GPO LinksTo)) {
-	 	$oOutput = New-Object System.Object;
+	[xml]$oGpoReport = Get-GPOReport -Guid $oGpo.ID -ReportType xml;
+	if (!(Test-Member $oGpoReport.GPO LinksTo)) {
+		$oOutput = New-Object System.Object;
 		$oOutput | Add-Member -type NoteProperty -Name 'Status' -Value 'Unlinked';
 		$oOutput | Add-Member -type NoteProperty -Name 'Name' -Value $oGpo.DisplayName;
 		$aOutput += $oOutput;

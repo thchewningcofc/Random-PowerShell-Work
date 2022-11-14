@@ -20,15 +20,15 @@
 [CmdletBinding()]
 param (
 	[Parameter(Mandatory,
-			   ValueFromPipeline,
-			   ValueFromPipelineByPropertyName)]
+		ValueFromPipeline,
+		ValueFromPipelineByPropertyName)]
 	[string[]]$Computername,
 	[Parameter(Mandatory)]
 	[string]$DomainName,
 	[Parameter(Mandatory)]
-	[string]$UnjoinLocalCredentialXmlFilePath,
+	[SecureString]$UnjoinLocalCredentialXmlFilePath,
 	[Parameter(Mandatory)]
-	[string]$DomainCredentialXmlFilePath
+	[SecureString]$DomainCredentialXmlFilePath
 )
 begin {
 	$ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop
@@ -53,7 +53,7 @@ begin {
 	}
 	Function Test-Ping ($ComputerName) {
 		$Result = ping $Computername -n 2
-		if ($Result | where { $_ -match 'Reply from ' }) {
+		if ($Result | Where-Object { $_ -match 'Reply from ' }) {
 			$true
 		} else {
 			$false
@@ -67,7 +67,7 @@ begin {
 			$false	
 		}
 	}
-	function Wait-Reboot ($Computername,$Credential) {
+	function Wait-Reboot ($Computername,[SecureString] $Credential) {
 		while (Test-Ping -ComputerName $Computername) {
 			Write-Verbose "Waiting for $Computername to go offline..."
 			Start-Sleep -Seconds 1

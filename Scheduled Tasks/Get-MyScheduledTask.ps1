@@ -1,5 +1,4 @@
 ﻿#Requires -Version 4
-
 <#
 .SYNOPSIS
 	This script finds all scheduled tasks registered on a local computer.  It outputs the author of the scheduled task

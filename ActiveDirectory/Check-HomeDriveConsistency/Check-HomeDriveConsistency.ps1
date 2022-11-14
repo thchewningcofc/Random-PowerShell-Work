@@ -83,7 +83,7 @@ function AddHomeDriveConfig($User) {
             Add-ADGroupMember -Identity $config.Node.SecurityGroupDN -Members $User
         }
         Write-Information "Checking if the homeDirectory AD attribute is set..."
-        if($User.HomeDirectory -eq $null) {
+        if($null -eq $User.HomeDirectory) {
             Write-Warning "homeDirectory not set, setting now..."
             SetADHomeDriveAttributes($User)
         }
@@ -120,12 +120,12 @@ function RemoveHomeDriveConfig($User) {
             Remove-ADGroupMember -Identity $config.Node.SecurityGroupDN -Members $User -Confirm:$false
         }
         Write-Information "Checking if the homeDirectory AD attribute is set..."
-        if(-not ($User.HomeDirectory -eq $null)) {
+        if(-not ($null -eq $User.HomeDirectory)) {
             Write-Warning "homeDirectory is set, removing setting now..."
             RemoveADHomeDriveAttributes($User)
         }
         Write-Information "Checking if the homeDrive AD attribute is set..."
-        if(-not ($User.HomeDrive -eq $null)) {
+        if(-not ($null -eq $User.HomeDrive)) {
             Write-Warning "homeDrive is set, removing setting now..."
             RemoveADHomeDriveAttributes($User)
         }

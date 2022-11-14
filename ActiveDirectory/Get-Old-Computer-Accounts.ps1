@@ -1,8 +1,8 @@
 ﻿function findOldADComputers () {
 	$aOldComputers = @();
-	$aAllAdComputers = Get-ADComputer -Filter * -Properties LastLogonDate,PasswordLastSet | Where { $_.Enabled -eq $true };
+	$aAllAdComputers = Get-ADComputer -Filter * -Properties LastLogonDate,PasswordLastSet | Where-Object { $_.Enabled -eq $true };
 	foreach ($oAdComputer in $aAllAdComputers) { 
-		if ($oAdComputer.lastLogonDate -ne $null) {
+		if ($null -ne $oAdComputer.lastLogonDate) {
 			if ($oAdComputer.lastLogonDate -lt [DateTime]::Now.Subtract([TimeSpan]::FromDays(60))) {
 				if ($oAdComputer.PasswordLastSet -lt [DateTime]::Now.Subtract([TimeSpan]::FromDays(60))) {
 					$aOldComputers += $oAdComputer.Name;

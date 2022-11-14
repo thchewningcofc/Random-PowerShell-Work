@@ -13,7 +13,7 @@ function Get-UserProfilePath
 	
 		This example finds the user profile path based on the username
 	.PARAMETER Sid
-	 	The user SID
+		The user SID
 	.PARAMETER Username
 		The username
 	#>

@@ -198,16 +198,16 @@ foreach ($user in $SeedScreenName) {
             - does not have a default profile image
             - has at least one keyword in list in profile
             #>
-        Get-TwitterFollowers -ScreenName $user -Verbose:$VerbosePreference | where {
+        Get-TwitterFollowers -ScreenName $user -Verbose:$VerbosePreference | Where-Object {
             $desc = $_.description;
             -not $_.protected -and ## is not a protected account
             -not $_.following -and ## I am not following them already
             -not $_.followed_by -and ## They are not following me
             $_.description -and ## They have a profile
             $_.profile_image_url -notmatch 'default_profile_images' -and ## They don't have a default profilate image
-            ($profileDescKeywords | ? { $desc -match $_ }) -and ## They have at least one interesting word in their profile
+            ($profileDescKeywords | Where-Object { $desc -match $_ }) -and ## They have at least one interesting word in their profile
             $_.screen_name -notin $NeverFollow
-        } | foreach {
+        } | ForEach-Object {
             Follow-TwitterUser -ScreenName $_.screen_name -Verbose:$VerbosePreference
         }
     } catch {

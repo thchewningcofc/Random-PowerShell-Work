@@ -1,4 +1,4 @@
-﻿$aPcs = Get-Content dddd.txt | where 
+﻿$aPcs = Get-Content dddd.txt | Where-Object 
 foreach ($oPc in $aPcs) {
 	$sUser = $oPc.ToLower();
 	if ($sUser -eq 'isspare23') {

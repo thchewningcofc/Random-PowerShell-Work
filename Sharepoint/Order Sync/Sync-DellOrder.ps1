@@ -223,9 +223,9 @@ begin {
         }
 		process {
 			try {
-                $AllOrders = Import-Csv -Path $DellOrdersFilePath | where {$ExcludedOrders -notcontains $_.Bestelnummer}
+                $AllOrders = Import-Csv -Path $DellOrdersFilePath | Where-Object {$ExcludedOrders -notcontains $_.Bestelnummer}
                 Write-Log "Found $($AllOrders.Count) total Dell orders"
-				$Orders = $AllOrders | where {$ExcludedOrders -notcontains $_.Bestelnummer}
+				$Orders = $AllOrders | Where-Object {$ExcludedOrders -notcontains $_.Bestelnummer}
                 Write-Log "Validating the order file $DellOrdersFilePath..."
                 $ValidFields = 'Datum van bestelling','Status','Geschatte leveringsdatum','Bestelnummer','Nummer van inkooporder'
                 if (Compare-Object -DifferenceObject ($Orders[0].Psobject.Properties.Name) -ReferenceObject $ValidFields) {
@@ -298,11 +298,11 @@ begin {
 				if ($OrderNumber) {
 					foreach ($Order in $OrderNumber) {
 						$Filter = "Order_NL_REL_ENTP_$($Order)_\d{4}-\d{2}-\d{2}.pdf"
-						$PdfOrders += Get-ChildItem -Path $PdfOrderFolderPath | where { $_.Name -match $Filter }
+						$PdfOrders += Get-ChildItem -Path $PdfOrderFolderPath | Where-Object { $_.Name -match $Filter }
 					}
 				} else {
 					$Filter = 'Order_NL_REL_ENTP_\d+_\d{4}-\d{2}-\d{2}.pdf'
-					$PdfOrders = Get-ChildItem -Path $PdfOrderFolderPath | where { $_.Name -match $Filter }
+					$PdfOrders = Get-ChildItem -Path $PdfOrderFolderPath | Where-Object { $_.Name -match $Filter }
 				}
 				if (!$PdfOrders) {
 					Write-Log 'No PDF orders found'
@@ -519,11 +519,11 @@ begin {
 				if ($InvoiceNumber) {
 					foreach ($Invoice in $InvoiceNumber) {
 						$Filter = "Invoice_NL_REL_ENTP_$($Invoice)_\d{4}-\d{2}-\d{2}.pdf"
-						$PdfInvoices += Get-ChildItem -Path $PdfInvoiceFolderPath | where { $_.Name -match $Filter }
+						$PdfInvoices += Get-ChildItem -Path $PdfInvoiceFolderPath | Where-Object { $_.Name -match $Filter }
 					}
 				} else {
 					$Filter = 'Invoice_NL_REL_ENTP_\d+_\d{4}-\d{2}-\d{2}.pdf'
-					$PdfInvoices = Get-ChildItem -Path $PdfInvoiceFolderPath | where { $_.Name -match $Filter }
+					$PdfInvoices = Get-ChildItem -Path $PdfInvoiceFolderPath | Where-Object { $_.Name -match $Filter }
 				}
 				if ($PdfInvoices) {
 					Write-Log -Message "$($PdfInvoices.Count) PDF invoices found"
@@ -703,7 +703,7 @@ process {
 				Write-Log -Message 'Dell order retrieval failed.  Emailed notification' -LogLevel 3
 			} else {
 				Write-Log "Found $($AllDellOrders.Count) total Dell order(s)"
-                $DellOrders = $AllDellOrders  | where {$_.Status -ne 'Verwerking van bestelling'}
+                $DellOrders = $AllDellOrders  | Where-Object {$_.Status -ne 'Verwerking van bestelling'}
                 if ($DellOrders) {
                     Write-Log "Found $($AllDellOrders.Count - $DellOrders.Count) orders in a status of 'Verwerking van bestelling'. Excluding from sync process"
                 } else {

@@ -56,7 +56,7 @@ describe 'Get-FileViaSftp.ps1' {
 	}
 
 	it 'downloads the expected file: <TestName>' -TestCases $testCases.All {
-		param($Server,$LocalFolderPath,$RemoteFilePath,$Credential,$Force)
+		param($Server,$LocalFolderPath,$RemoteFilePath,[SecureString] $Credential,$Force)
 	
 		$result = & $commandName @PSBoundParameters
 
@@ -68,13 +68,13 @@ describe 'Get-FileViaSftp.ps1' {
 			ParameterFilter = {
 				$LocalPath -eq $LocalFolderPath -and
 				$RemoteFile -eq $RemoteFilePath
-			 }
+			}
 		}
 		Assert-MockCalled @assMParams
 	}
 
 	it 'should not prompt to accept the key when creating the SFTP session: <TestName>' -TestCases $testCases.All {
-		param($Server,$LocalFolderPath,$RemoteFilePath,$Credential,$Force)
+		param($Server,$LocalFolderPath,$RemoteFilePath,[SecureString] $Credential,$Force)
 	
 		$result = & $commandName @PSBoundParameters
 
@@ -91,7 +91,7 @@ describe 'Get-FileViaSftp.ps1' {
 	context 'When -Force is used' {
 
 		it 'should overwrite the local file if it exists: <TestName>' -TestCases $testCases.Overwrite {
-			param($Server,$LocalFolderPath,$RemoteFilePath,$Credential,$Force)
+			param($Server,$LocalFolderPath,$RemoteFilePath,[SecureString] $Credential,$Force)
 		
 			$result = & $commandName @PSBoundParameters
 
@@ -120,7 +120,7 @@ describe 'Get-FileViaSftp.ps1' {
 		} -ParameterFilter { $Path -like 'Variable:\'}
 
 		it 'should remove the session: <TestName>' -TestCases $testCases.All {
-			param($Server,$LocalFolderPath,$RemoteFilePath,$Credential,$Force)
+			param($Server,$LocalFolderPath,$RemoteFilePath,[SecureString] $Credential,$Force)
 		
 			$result = & $commandName @PSBoundParameters
 
@@ -141,7 +141,7 @@ describe 'Get-FileViaSftp.ps1' {
 		function Get-Module { param() }
 
 		it 'downloads all required modules: <TestName>' -TestCases $testCases.All {
-			param($Server,$LocalFolderPath,$RemoteFilePath,$Credential,$Force)
+			param($Server,$LocalFolderPath,$RemoteFilePath,[SecureString] $Credential,$Force)
 		
 			$result = & $commandName @PSBoundParameters
 

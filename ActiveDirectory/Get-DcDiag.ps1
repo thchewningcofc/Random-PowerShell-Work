@@ -81,13 +81,13 @@ process {
 			}
 		}
 		
-		$SummaryResults = $SummaryResults | group test, result -NoElement
-		$Output.'Authentication' = "{0} / {1} / {2}" -f ($SummaryResults | where { $_.Name -eq 'Authentication, PASS' }).Count, ($SummaryResults | where { $_.Name -eq 'Authentication, WARN' }).Count, ($SummaryResults | where { $_.Name -eq 'Authentication, FAIL' }).Count
-		$Output.'Basic' = "{0} / {1} / {2}" -f ($SummaryResults | where { $_.Name -eq 'Basic, PASS' }).Count, ($SummaryResults | where { $_.Name -eq 'Basic, WARN' }).Count, ($SummaryResults | where { $_.Name -eq 'Basic, FAIL' }).Count
-		$Output.'Forwarders' = "{0} / {1} / {2}" -f ($SummaryResults | where { $_.Name -eq 'Forwarders, PASS' }).Count, ($SummaryResults | where { $_.Name -eq 'Forwarders, WARN' }).Count, ($SummaryResults | where { $_.Name -eq 'Forwarders, FAIL' }).Count
-		$Output.'Delegations' = "{0} / {1} / {2}" -f ($SummaryResults | where { $_.Name -eq 'Delegations, PASS' }).Count, ($SummaryResults | where { $_.Name -eq 'Delegations, WARN' }).Count, ($SummaryResults | where { $_.Name -eq 'Delegations, FAIL' }).Count
-		$Output.'Dynamic Updates' = "{0} / {1} / {2}" -f ($SummaryResults | where { $_.Name -eq 'DynamicUpdates, PASS' }).Count, ($SummaryResults | where { $_.Name -eq 'DynamicUpdates, WARN' }).Count, ($SummaryResults | where { $_.Name -eq 'DynamicUpdates, FAIL' }).Count
-		$Output.'Record Registrations' = "{0} / {1} / {2}" -f ($SummaryResults | where { $_.Name -eq 'RecordRegistrations, PASS' }).Count, ($SummaryResults | where { $_.Name -eq 'RecordRegistrations, WARN' }).Count, ($SummaryResults | where { $_.Name -eq 'RecordRegistrations, FAIL' }).Count
+		$SummaryResults = $SummaryResults | Group-Object test, result -NoElement
+		$Output.'Authentication' = "{0} / {1} / {2}" -f ($SummaryResults | Where-Object { $_.Name -eq 'Authentication, PASS' }).Count, ($SummaryResults | Where-Object { $_.Name -eq 'Authentication, WARN' }).Count, ($SummaryResults | Where-Object { $_.Name -eq 'Authentication, FAIL' }).Count
+		$Output.'Basic' = "{0} / {1} / {2}" -f ($SummaryResults | Where-Object { $_.Name -eq 'Basic, PASS' }).Count, ($SummaryResults | Where-Object { $_.Name -eq 'Basic, WARN' }).Count, ($SummaryResults | Where-Object { $_.Name -eq 'Basic, FAIL' }).Count
+		$Output.'Forwarders' = "{0} / {1} / {2}" -f ($SummaryResults | Where-Object { $_.Name -eq 'Forwarders, PASS' }).Count, ($SummaryResults | Where-Object { $_.Name -eq 'Forwarders, WARN' }).Count, ($SummaryResults | Where-Object { $_.Name -eq 'Forwarders, FAIL' }).Count
+		$Output.'Delegations' = "{0} / {1} / {2}" -f ($SummaryResults | Where-Object { $_.Name -eq 'Delegations, PASS' }).Count, ($SummaryResults | Where-Object { $_.Name -eq 'Delegations, WARN' }).Count, ($SummaryResults | Where-Object { $_.Name -eq 'Delegations, FAIL' }).Count
+		$Output.'Dynamic Updates' = "{0} / {1} / {2}" -f ($SummaryResults | Where-Object { $_.Name -eq 'DynamicUpdates, PASS' }).Count, ($SummaryResults | Where-Object { $_.Name -eq 'DynamicUpdates, WARN' }).Count, ($SummaryResults | Where-Object { $_.Name -eq 'DynamicUpdates, FAIL' }).Count
+		$Output.'Record Registrations' = "{0} / {1} / {2}" -f ($SummaryResults | Where-Object { $_.Name -eq 'RecordRegistrations, PASS' }).Count, ($SummaryResults | Where-Object { $_.Name -eq 'RecordRegistrations, WARN' }).Count, ($SummaryResults | Where-Object { $_.Name -eq 'RecordRegistrations, FAIL' }).Count
 		
 		[pscustomobject]$Output
 	}

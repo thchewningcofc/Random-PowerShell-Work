@@ -141,16 +141,16 @@ process {
                             ## Remove the members from the CSV file to keep the file current
                             (Import-Csv -Path $LogFilePath | Where-Object {$RemovedMembers -notcontains $_.Member}) | Export-Csv -Path $LogFilePath -NoTypeInformation
                         }
-                         $AddedMembers = ($ComparedMembers |  Where-Object { $_.SideIndicator -eq '=>' }).InputObject
-                         if (-not $AddedMembers) {
-                             Write-Log -Message 'No members have been removed since last check'
-                         } else {
-                             Write-Log -Message "Found [$($AddedMembers.Count)] members that have been added since last check"
-                             Send-ChangeNotification -GroupName $g -ChangeType 'Added' -Members $AddedMembers
-                             Write-Log -Message "Emailed change notification to $Email"
-                             ## Add the members from the CSV file to keep the file current
-                            $AddedMembers | foreach {[pscustomobject]@{'Group' = $g; 'Member' = $_}} | Export-Csv -Path $LogFilePath -Append -NoTypeInformation
-                         }
+                        $AddedMembers = ($ComparedMembers |  Where-Object { $_.SideIndicator -eq '=>' }).InputObject
+                        if (-not $AddedMembers) {
+                            Write-Log -Message 'No members have been removed since last check'
+                        } else {
+                            Write-Log -Message "Found [$($AddedMembers.Count)] members that have been added since last check"
+                            Send-ChangeNotification -GroupName $g -ChangeType 'Added' -Members $AddedMembers
+                            Write-Log -Message "Emailed change notification to $Email"
+                            ## Add the members from the CSV file to keep the file current   $AddedMembers | foreach {[pscustomobject]@{'Group' = $g; 'Member' = $_}} | Export-Csv -Path $LogFilePath -Append -NoTypeInformation
+                            $AddedMembers | ForEach-Object {[pscustomobject]@{'Group' = $g; 'Member' = $_}} | Export-Csv -Path $LogFilePath -Append -NoTypeInformation
+                        }
                         
                     }
                 }

@@ -29,7 +29,7 @@
 	
 	[Parameter()]
 	[ValidateNotNullOrEmpty()]
-	[string]$DefaultPassword = 'p@$$w0rd12345',
+	[SecureString]$DefaultPassword = 'p@$$w0rd12345',
 	
 	[Parameter()]
 	[ValidateScript({ Test-Path -Path $_ })]

@@ -15,7 +15,7 @@ foreach ($xGpo in $aAllGpos) {
 	if (Test-Member $xGpo 'LinksTo') {  ## GPO links to at least one OU
 		$sGpoName = $xGpo.Name;
 		if ($xGpo.LinksTo -is [array]) { ## Links to more than on OU
-			$aLinkedOus = $xGpo.LinksTo | Select-Object SOMPath | % { $_.SOMPath }
+			$aLinkedOus = $xGpo.LinksTo | Select-Object SOMPath | ForEach-Object { $_.SOMPath }
 		} else {
 			$aLinkedOus = , @($xGpo.LinksTo.SOMPath);
 		}##endif
@@ -34,10 +34,10 @@ foreach ($o in $aObjects) {
 	}##endif
 }##endforeach
 
-$a0CountOus = $aOuDns | Group-Object | Where-Object { $_.Count -eq 1 } | % { $_.Name };
+$a0CountOus = $aOuDns | Group-Object | Where-Object { $_.Count -eq 1 } | ForEach-Object { $_.Name };
 $aFiltered0CountOUs = @();
 foreach ($sOu in $a0CountOus) {
-	if (!(Get-ADObject -Filter "ObjectClass -eq 'organizationalUnit'" | where { $_.DistinguishedName -like "*$sOu*" -and $_.DistinguishedName -ne $sOu })) {
+	if (!(Get-ADObject -Filter "ObjectClass -eq 'organizationalUnit'" | Where-Object { $_.DistinguishedName -like "*$sOu*" -and $_.DistinguishedName -ne $sOu })) {
 		$aFiltered0CountOUs += convertDsnToPathFormat $sOu;
 	}##endif
 }##endforeach

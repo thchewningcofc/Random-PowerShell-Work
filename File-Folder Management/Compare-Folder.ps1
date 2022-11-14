@@ -1,3 +1,26 @@
+<#
+.SYNOPSIS
+Short description
+
+.DESCRIPTION
+Long description
+
+.PARAMETER ReferenceFolder
+Parameter description
+
+.PARAMETER DifferenceFolder
+Parameter description
+
+.PARAMETER ExcludeFilePath
+Parameter description
+
+.EXAMPLE
+Compare-Folder $ReferenceFolder $DifferenceFolder
+
+.NOTES
+General notes
+#>
+
 function Compare-Folder
 {
 	[CmdletBinding()]
@@ -31,7 +54,7 @@ function Compare-Folder
 			foreach ($s in $files)
 			{
 				$selectObjects = @('Hash', @{ n = 'Path'; e = { $_.Path.SubString($Folder.Length) } })
-				Get-FileHash $s.Fullname | Select $selectObjects -ExcludeProperty Path
+				Get-FileHash $s.Fullname | Select-Object $selectObjects -ExcludeProperty Path
 			}
 		}
 	}

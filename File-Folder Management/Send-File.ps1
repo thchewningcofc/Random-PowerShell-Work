@@ -2,7 +2,7 @@
 {
 	<#
 	.SYNOPSIS
-		This function sends a file (or folder of files recursively) to a destination WinRm session. This function was originally
+		This function sends a file (or folder of files recursively) to a c. This function was originally
 		built by Lee Holmes (http://poshcode.org/2216) but has been modified to recursively send folders of files as well
 		as to support UNC paths.
 

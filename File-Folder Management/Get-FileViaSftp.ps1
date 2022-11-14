@@ -3,19 +3,19 @@
 		This function downloads remote a remote SFTP server.
 
 	.PARAMETER Server
-		 A mandatory string parameter representing an IP address or hostname of the SSH server.
+		A mandatory string parameter representing an IP address or hostname of the SSH server.
 
 	.PARAMETER LocalFolderPath
-		 A mandatory string parameter representing the local folder path to download the file into.
+		A mandatory string parameter representing the local folder path to download the file into.
 
 	.PARAMETER RemoteFilePath
-		 A mandatory string parameter representing the path to the remote file inside of the session home folder.
+		A mandatory string parameter representing the path to the remote file inside of the session home folder.
 
 	.PARAMETER Credentrial
 		An mandatory pscredential parameter representing the username and password to use to connet to the SSH server.
 
 	.PARAMETER Force
-		 By default, the script will not overwrite any local files. Use this switch parameter to override that.
+		By default, the script will not overwrite any local files. Use this switch parameter to override that.
 
 	.EXAMPLE
 		PS> .\Get-FileViaSftp.ps1 -Server 192.168.0.2 -LocalFolderPath C:\ -RemoteFilePath file.txt -Credential (Get-Credential)

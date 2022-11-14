@@ -36,7 +36,7 @@ begin {
 		function Test-MatchFirstNameLastName ($FirstName, $LastName) {
 			if ($FirstName -and $LastName) {
 				Write-Verbose -Message "$($MyInvocation.MyCommand) - Searching for AD user match based on first name '$FirstName', last name '$LastName'"
-				$Match = $AdUsers | where { ($_.givenName -eq $FirstName) -and ($_.surName -eq $LastName) }
+				$Match = $AdUsers | Where-Object { ($_.givenName -eq $FirstName) -and ($_.surName -eq $LastName) }
 				if ($Match) {
 					Write-Verbose "$($MyInvocation.MyCommand) - Match(es) found!"
 					$Match
@@ -53,7 +53,7 @@ begin {
 		function Test-MatchFirstNameMiddleInitialLastName ($FirstName, $MiddleInitial, $LastName) {
 			if ($FirstName -and $LastName -and $MiddleInitial) {
 				Write-Verbose -Message "$($MyInvocation.MyCommand) - Searching for AD user match based on first name '$FirstName', middle initial '$MiddleInitial' and last name '$LastName'"
-				$Match = $AdUsers | where { ($_.givenName -eq $FirstName) -and ($_.surName -eq $LastName) -and (($_.Initials -eq $MiddleInitial) -or ($_.Initials -eq "$MiddleInitial.")) }
+				$Match = $AdUsers | Where-Object { ($_.givenName -eq $FirstName) -and ($_.surName -eq $LastName) -and (($_.Initials -eq $MiddleInitial) -or ($_.Initials -eq "$MiddleInitial.")) }
 				if ($Match) {
 					Write-Verbose "$($MyInvocation.MyCommand) - Match(es) found!"
 					$Match
@@ -70,7 +70,7 @@ begin {
 		function Test-MatchFirstInitialLastName ($FirstName,$LastName) {
 			Write-Verbose -Message "$($MyInvocation.MyCommand) - Searching for AD user match based on first initial '$($FirstName.Substring(0,1))' and last name '$LastName'"
 			if ($FirstName -and $LastName) {
-				$Match = $AdUsers | where { "$($FirstName.SubString(0, 1))$LastName" -eq $_.samAccountName }
+				$Match = $AdUsers | Where-Object { "$($FirstName.SubString(0, 1))$LastName" -eq $_.samAccountName }
 				if ($Match) {
 					Write-Verbose "$($MyInvocation.MyCommand) - Match(es) found!"
 					$Match
@@ -134,7 +134,7 @@ begin {
 		#region ValidationTests
 		function Test-CsvField {
 			$CsvHeaders = (Get-Content $CsvFilePath | Select-Object -First 1).Split(',').Trim('"')
-			$AdToSourceFieldMappings.Values | foreach {
+			$AdToSourceFieldMappings.Values | ForEach-Object {
 				if (!($CsvHeaders -like $_)) {
 					return $false
 				}
@@ -232,11 +232,11 @@ begin {
 				'Match' = $false;
 				'MatchTest' = 'N/A'
 			}
-			$AdToOutputFieldMappings.Values | foreach {
+			$AdToOutputFieldMappings.Values | ForEach-Object {
 				$OutputRow[$_] = 'N/A'
 			}
 			
-			$SourceRowData.psobject.Properties | foreach {
+			$SourceRowData.psobject.Properties | ForEach-Object {
 				if ($_.Value) {
 					$OutputRow[$_.Name] = $_.Value
 				}
@@ -245,7 +245,7 @@ begin {
 		}
 		
 		function Add-ToOutputRow ([hashtable]$OutputRow, [object]$AdRowData, $MatchTest) {
-			$AdToOutputFieldMappings.Keys | foreach {
+			$AdToOutputFieldMappings.Keys | ForEach-Object {
 				if ($AdRowData.$_) {
 					$OutputRow[$AdToOutputFieldMappings[$_]] = $AdRowData.$_
 				}
@@ -255,7 +255,7 @@ begin {
 		}
 		
 		function Test-TestMatchValid ($FunctionParameters) {
-			$Compare = Compare-Object -ReferenceObject $FunctionParameters -DifferenceObject ($AdToSourceFieldMappings.Values | % { $_ }) -IncludeEqual -ExcludeDifferent
+			$Compare = Compare-Object -ReferenceObject $FunctionParameters -DifferenceObject ($AdToSourceFieldMappings.Values | ForEach-Object { $_ }) -IncludeEqual -ExcludeDifferent
 			if (!$Compare) {
 				$false
 			} elseif ($Compare.Count -ne $FunctionParameters.Count) {
@@ -266,7 +266,7 @@ begin {
 		}
 		
 		function Get-FunctionParams ($Function) {
-			$Function.Parameters.Keys | where { $AdToSourceFieldMappings.Values -contains $_ }
+			$Function.Parameters.Keys | Where-Object { $AdToSourceFieldMappings.Values -contains $_ }
 		}
 		#endregion
 		
@@ -304,12 +304,12 @@ process {
 		## Find all functions in memory that match Test-match*.  This will automatically include all of our tests
 		## without having to call them one at a time.  This will also automatically match all functions with only
 		## the fields the source data has
-		$TestFunctions = Get-ChildItem function:\Test-Match* | where { !$_.Module }
+		$TestFunctions = Get-ChildItem function:\Test-Match* | Where-Object { !$_.Module }
 		Write-Verbose "Found $($TestFunctions.Count) test functions in the script"
 		$MatchTestsToRun = @()
 		foreach ($TestFunction in $TestFunctions) {
 			Write-Verbose -Message "Checking to see if we'll use the $($TestFunction.Name) function"
-			if (Test-TestMatchValid -FunctionParameters ($TestFunction.Parameters.Keys | % { $_ })) {
+			if (Test-TestMatchValid -FunctionParameters ($TestFunction.Parameters.Keys | ForEach-Object { $_ })) {
 				Write-Verbose -Message "The source data has all of the function $($TestFunction.Name)'s parameters. We'll try this one"
 				$MatchTestsToRun += [System.Management.Automation.FunctionInfo]$TestFunction
 			} else {
@@ -319,7 +319,7 @@ process {
 		
 		## Once all the tests have been gathered that apply to the fields in the data source match them with the
 		## function name in the priorities hash table and sort them by priority
-		$MatchTestsToRun | foreach {
+		$MatchTestsToRun | ForEach-Object {
 			$Test = $_;
 			foreach ($i in $MatchFunctionPriorities.GetEnumerator()) {
 				if ($Test.Name -eq $i.Key) {
@@ -347,8 +347,8 @@ process {
 					Write-Verbose -Message "Running function $($Test.Name)..."
 					[array]$FuncParamKeys = Get-FunctionParams -Function $Test
 					[hashtable]$FuncParams = @{ }
-					[array]$FuncParamKeys | foreach {
-						$Row.psObject.Properties | foreach {
+					[array]$FuncParamKeys | ForEach-Object {
+						$Row.psObject.Properties | ForEach-Object {
 							if ([array]$FuncParamKeys -contains [string]$_.Name) {
 								$FuncParams[$_.Name] = $_.Value
 							}

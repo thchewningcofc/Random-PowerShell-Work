@@ -1,10 +1,10 @@
 ﻿<#	
 	===========================================================================
-	 Created on:   	1/29/2015 6:22 PM
-	 Created by:   	Adam Bertram
-	 Filename:     	Sharepoint.psm1
+	Created on:   	1/29/2015 6:22 PM
+	Created by:   	Adam Bertram
+	Filename:     	Sharepoint.psm1
 	-------------------------------------------------------------------------
-	 Module Name: Sharepoint
+	Module Name: Sharepoint
 	===========================================================================
 #>
 
@@ -22,7 +22,7 @@ function Get-SpPurchaseOrder {
 	process {
 		try {
 			if ($PoNumber) {
-                $SpPunchSite.Lists["Inkoop / Verkoop"].GetItems()| where {$_.xml -match "ows_Inkooporder='$PoNumber'"}
+                $SpPunchSite.Lists["Inkoop / Verkoop"].GetItems()| Where-Object {$_.xml -match "ows_Inkooporder='$PoNumber'"}
 			} else {
                 $SpPunchSite.Lists["Inkoop / Verkoop"].GetItems()
 			}

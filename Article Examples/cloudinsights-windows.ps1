@@ -1,4 +1,4 @@
- $DOWNLOAD_FROM = "https://$(Get-Variable domain -valueOnly)/rest/v1/integrations/raw/telegraf/releases/"
+$DOWNLOAD_FROM = "https://$(Get-Variable domain -valueOnly)/rest/v1/integrations/raw/telegraf/releases/"
 $DOWNLOAD_TO = (Get-Location).Path
 $INSTALL_DIR = "c:\program files\telegraf\"
 $CONFIG_DIR = "c:\program files\telegraf\telegraf.d"
@@ -6,7 +6,7 @@ $PKG_NAME = "telegraf-1.12.3_windows_amd64.zip"
 $EXE_NAME = "telegraf.exe"
 
 $COMPUTER_NAME=(Get-Childitem -path env:computername).Value
-$HOSTIP=(Test-Connection $COMPUTER_NAME -count 1 | select Address,Ipv4Address).Ipv4Address
+$HOSTIP=(Test-Connection $COMPUTER_NAME -count 1 | Select-Object Address,Ipv4Address).Ipv4Address
 $NODE_UUID=(Get-CimInstance -Class Win32_ComputerSystemProduct).UUID
 $NODE_OS="Microsoft Windows"
 

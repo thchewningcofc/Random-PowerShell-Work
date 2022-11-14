@@ -9,7 +9,7 @@ $aComputerGPOs = Get-ADObject -Filter {(ObjectClass -eq "groupPolicyContainer")}
 
 $test = @();
 
-if ($aComputerGpos -ne $null) { 
+if ($null -ne $aComputerGpos) { 
 	$aReport = @() 
 	foreach ($oGpo in $aComputerGpos) { 
 		[XML]$xGpoReport = Get-GPOReport -Guid $oGpo.Name -ReportType XML;
@@ -20,10 +20,10 @@ if ($aComputerGpos -ne $null) {
 					$aSettings += $oExt.Extension.ChildNodes 
 				}##endforeach
 				if ($aSettings.Count -ne 0) {
-					echo '11111111'
-					echo "======NAME:$($xGpoReport.GPO.Name)========="
+					Write-Output '11111111'
+					Write-Output "======NAME:$($xGpoReport.GPO.Name)========="
 					$aSettings
-					echo '22222222'
+					Write-Output '22222222'
 					foreach ($oSetting in $aSettings) {
 						if ($oSetting.Name -match '^q\d+:RegistrySetting') {
 							$xGpoReport.GPO.Name
@@ -57,4 +57,4 @@ if ($aComputerGpos -ne $null) {
 	}##endforeach
 }##endif
 
-$test | Select -Unique
+$test | Select-Object -Unique
